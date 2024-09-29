@@ -1,0 +1,78 @@
+#include <iostream>
+using namespace std;
+
+struct ListNode {
+    int data;
+    ListNode* next;
+    ListNode(int value) : data(value), next(nullptr) {}
+};
+
+class LinkedList {
+public:
+    ListNode* head;
+    
+    LinkedList() {
+        head = nullptr;
+    }
+
+    void insertAtEnd(int value) {
+        ListNode* newNode = new ListNode(value);
+        if (head == nullptr) {
+            head = newNode;
+        } else {
+            ListNode* temp = head;
+            while (temp->next != nullptr) {
+                temp = temp->next;
+            }
+            temp->next = newNode;
+        }
+    }
+
+    bool detectCycle() {
+        ListNode *slow = head, *fast = head;
+        while (fast != nullptr && fast->next != nullptr) {
+            slow = slow->next;
+            fast = fast->next->next;
+            if (slow == fast) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    void createCycle(int pos) {
+        if (pos < 0) return;
+        ListNode* temp = head;
+        ListNode* cycleNode = nullptr;
+        int index = 0;
+        while (temp->next != nullptr) {
+            if (index == pos) {
+                cycleNode = temp;
+            }
+            temp = temp->next;
+            index++;
+        }
+        if (cycleNode != nullptr) {
+            temp->next = cycleNode;
+        }
+    }
+};
+
+int main() {
+    LinkedList list;
+    list.insertAtEnd(3);
+    list.insertAtEnd(2);
+    list.insertAtEnd(0);
+    list.insertAtEnd(-4);
+
+    int pos = 1;
+    list.createCycle(pos);  
+
+    if (list.detectCycle()) {
+        cout << "true" << endl;  
+    } else {
+        cout << "false" << endl;
+    }
+
+    return 0;
+}
